@@ -1,0 +1,12 @@
+# Main app dependencies
+streamlit
+langchain
+langchain-community
+langchain-cohere
+langchain-huggingface
+langchain-text-splitters
+pypdf
+faiss-cpu
+langsmith
+python-dotenv
+sentence-transformers
