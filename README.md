@@ -1,143 +1,127 @@
 # 📄 PDF Talker
 
-A local **RAG (Retrieval-Augmented Generation)** application that lets you upload any PDF and chat with it — powered by **Cohere LLM**, **FAISS** vector search, and **HuggingFace embeddings**, with full pipeline transparency.
+Chat with your PDFs using an **agentic RAG pipeline built with LangGraph**. Upload one or more PDFs and ask questions in plain language. Answers cite the exact file and page, follow-up questions keep their context, and every answer is checked against its sources before you see it.
 
-![PDF Talker Demo](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
-![LangChain](https://img.shields.io/badge/LangChain-🦜-1C3C3C)
-![Cohere](https://img.shields.io/badge/Cohere-LLM-orange)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-agentic-1C3C3C)
+![Cohere](https://img.shields.io/badge/Cohere-LLM%20%7C%20Embed%20%7C%20Rerank-orange)
+
+Deployed on Streamlit Community Cloud. No PDF handy? Click **Try the sample insurance policy** in the sidebar.
 
 ---
 
 ## ✨ Features
 
-- 📤 Upload any PDF and ask questions in natural language
-- 🔍 FAISS vector similarity search with distance scores
-- 🤖 Cohere `command-r-plus` LLM for grounded answers
-- 📊 Real-time pipeline metrics (retrieval latency, generation latency, token usage)
-- 🔬 Under-the-hood trace: see query vectors and retrieved chunks
-- 📡 LangSmith tracing integration
-- 📏 RAGAS evaluation script (standalone)
+- 🧠 **Agentic RAG (LangGraph)**: routes each message, rewrites follow-ups into standalone queries, splits questions that depend on several facts into sub-queries, grades retrieved chunks, searches again with new wording when nothing is relevant, and runs a grounding check that triggers a stricter regeneration if a claim isn't supported
+- 🔀 **Hybrid retrieval**: FAISS semantic search + BM25 keyword search, merged with reciprocal rank fusion, then **Cohere Rerank**
+- 📚 **Citations**: every answer cites `[n]` sources with file name, page number and relevance score
+- 💬 **Real chat**: conversation memory and streamed answers
+- 📂 **Multiple PDFs** per session, with clear messages for scanned or unreadable files
+- 🔍 **Under the hood**: a live agent trace, retrieved chunks, latency, time to first token and tokens used
+- 📏 **Evaluation harness** comparing three pipeline modes on a labelled question set
+- 📡 **LangSmith** tracing
 
----
+## 🧠 How the agent works
 
-## 🗂️ Project Structure
+```mermaid
+flowchart LR
+    Q[Question + chat history] --> A{Route}
+    A -- greeting --> C[Reply directly]
+    A -- documents --> R[1–3 sub-queries<br/>FAISS + BM25 → Rerank<br/>per query, merged]
+    R --> G{Relevant chunks?}
+    G -- no, first try --> W[Rewrite query] --> R
+    G -- no, after retry --> N[“Not found”<br/>no LLM call]
+    G -- yes --> Gen[Answer with citations]
+    Gen --> H{Grounded?}
+    H -- no, first try --> Gen
+    H -- yes --> Done[Answer]
+```
+
+The app also lets you switch to **Hybrid** (no agent steps) or **Basic** (FAISS top-3, the original pipeline), so you can compare the modes side by side.
+
+## 📊 Evaluation
+
+`evaluation.py` runs every mode over [`eval/eval_set.json`](eval/eval_set.json): 18 questions about a 15-page fictional insurance policy ([`eval/sample_policy.pdf`](eval/sample_policy.pdf)). The set includes exact-code lookups, paraphrased questions, a question that needs two sections, and 2 questions the document can't answer.
+
+| Mode | hit@3 | MRR | Correctness | Faithfulness | Avg latency |
+|---|---|---|---|---|---|
+| **Agentic** (LangGraph) | **0.94** | **0.94** | **94%** | **100%** | 10.9s |
+| Hybrid + rerank | 0.94 | 0.94 | 94% | 100% | 3.2s |
+| Basic (FAISS top-3) | 0.88 | 0.84 | 89% | 94% | 2.5s |
+
+What the numbers show:
+- Hybrid search fixed the cases where pure vector search missed the right page. For example, the cooling-off question: basic retrieval never found page 1 and answered "not found".
+- Agentic mode matches hybrid on these single-turn questions. Its extra steps pay off where this set doesn't measure: follow-up questions (rewritten into standalone queries), weak evidence (it broadens the search), and answers that fail the grounding check. It costs about 3× the latency.
+- Every mode still misses the question that needs two sections ("burst pipe while away for two months" depends on both the *unoccupied* definition and an exclusion). The agent now finds the exclusion but doesn't yet connect it to the 45-day definition.
+
+- **hit@3 / MRR**: did retrieval return a chunk from the correct page, and how high was it ranked
+- **Correctness**: an LLM judge compares the answer with the ground truth. For out-of-scope questions, the answer must decline instead of guessing.
+- **Faithfulness**: an LLM judge checks every claim against the retrieved chunks
+
+The judge is the same Cohere model, so treat the numbers as a relative comparison between modes, not an absolute score. Per-question answers and verdicts are in [`eval/results/results.json`](eval/results/results.json).
+
+```bash
+python evaluation.py                                   # sample policy, all modes
+python evaluation.py --pdf my.pdf --set my_set.json    # your own document and questions
+```
+
+## 🗂️ Project structure
 
 ```
 PDFTalker/
-├── app.py              # Main Streamlit UI
-├── rag_pipeline.py     # RAG logic (PDF → FAISS → retrieval → generation)
-├── evaluation.py       # Standalone RAGAS evaluation script
-├── requirements.txt    # Python dependencies
-├── .env                # 🔒 Your API keys (NOT committed to GitHub)
-├── .env.example        # ✅ Template — safe to commit
-├── .gitignore
-└── README.md
+├── app.py                  # Streamlit chat UI (streaming, citations, agent trace)
+├── agent.py                # LangGraph graph: routing, rewriting, grading, grounding check
+├── rag_pipeline.py         # PDF loading, chunking, FAISS + BM25, fusion, reranking
+├── evaluation.py           # Compares the pipeline modes on a labelled set
+├── eval/
+│   ├── sample_policy.pdf   # Fictional 15-page policy used for the demo and evaluation
+│   ├── make_sample_pdf.py  # Regenerates the sample PDF
+│   ├── eval_set.json       # Questions, ground truth and expected pages
+│   └── results/            # Latest evaluation output
+├── tests/                  # Offline unit tests (no API key needed)
+├── .streamlit/config.toml
+├── requirements.txt        # App dependencies (no torch, small enough for free hosting)
+└── requirements-eval.txt   # Dev extras: pytest, reportlab
 ```
 
----
+## 🚀 Run locally
 
-## 🚀 Getting Started (Local)
-
-### 1. Clone the repo
 ```bash
-git clone https://github.com/YOUR_USERNAME/PDFTalker.git
+git clone https://github.com/Milankalathiya/PDFTalker.git
 cd PDFTalker
-```
-
-### 2. Create a virtual environment
-```bash
 python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-
-# macOS/Linux
-source .venv/bin/activate
-```
-
-### 3. Install dependencies
-```bash
+.venv\Scripts\activate            # Windows  (macOS/Linux: source .venv/bin/activate)
 pip install -r requirements.txt
-```
-
-### 4. Set up API keys
-```bash
-# Copy the template
-copy .env.example .env    # Windows
-cp .env.example .env      # macOS/Linux
-
-# Open .env and fill in your keys:
-# COHERE_API_KEY=...
-# LANGCHAIN_API_KEY=...
-```
-
-### 5. Run the app
-```bash
+copy .env.example .env            # then add your COHERE_API_KEY
 streamlit run app.py
 ```
 
-Open [http://localhost:8501](http://localhost:8501) in your browser.
+Tests: `pip install -r requirements-eval.txt` then `pytest`.
 
----
+## 🌐 Deploy (Streamlit Community Cloud)
 
-## 🌐 Deploy for Free (Streamlit Community Cloud)
-
-1. Push this repo to GitHub (`.env` is gitignored — your keys are safe)
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub
-3. Click **"New app"** → select your repo → set `app.py` as the entry point
-4. Add your secrets under **Settings → Secrets**:
+1. Push to GitHub (`.env` is gitignored).
+2. On [share.streamlit.io](https://share.streamlit.io), create an app from the repo with `app.py` as the entry point.
+3. Under **Settings → Secrets**, add:
    ```toml
    COHERE_API_KEY = "your_cohere_api_key"
-   LANGCHAIN_API_KEY = "your_langsmith_api_key"
+   LANGCHAIN_API_KEY = "your_langsmith_api_key"   # optional
    LANGCHAIN_TRACING_V2 = "true"
-   LANGCHAIN_ENDPOINT = "https://api.smith.langchain.com"
-   LANGCHAIN_PROJECT = "RAG_demo"
+   LANGCHAIN_PROJECT = "PDFTalker"
    ```
-5. Click **Deploy** — done! 🎉
 
----
+Embeddings, reranking and generation all run on Cohere's API, so the app installs no torch or local models and fits comfortably within the free tier.
 
-## 📊 Run RAGAS Evaluation
+## 🧰 Tech stack
 
-Edit the `data` dict in `evaluation.py` with real Q/A pairs from your PDF, then run:
+Streamlit · LangGraph · LangChain · Cohere (`command-r-plus-08-2024`, `embed-english-v3.0`, `rerank-v3.5`) · FAISS · BM25 (`rank-bm25`) · pypdf · LangSmith · pytest
 
-```bash
-python evaluation.py
-```
+## 👤 Author
 
-This evaluates your RAG pipeline on 4 metrics:
-| Metric | What it measures |
-|---|---|
-| `faithfulness` | Is the answer grounded in the retrieved context? |
-| `answer_relevancy` | Is the answer relevant to the question? |
-| `context_precision` | Are the retrieved chunks precise? |
-| `context_recall` | Did retrieval capture all needed information? |
+**Milan Kalathiya**, AI engineer (agentic AI, RAG, Python and Java backends)
 
----
+- ✉️ [kalthiyamilan@gmail.com](mailto:kalthiyamilan@gmail.com)
+- 💼 [linkedin.com/in/milankalathiya](https://linkedin.com/in/milankalathiya)
+- 🐙 [github.com/Milankalathiya](https://github.com/Milankalathiya)
 
-## 🔑 API Keys Needed
-
-| Key | Where to get it |
-|---|---|
-| `COHERE_API_KEY` | [dashboard.cohere.com](https://dashboard.cohere.com) |
-| `LANGCHAIN_API_KEY` | [smith.langchain.com](https://smith.langchain.com) (optional, for tracing) |
-
----
-
-## 🛡️ Security Notes
-
-- **`.env` is in `.gitignore`** — your keys will never be committed
-- Use `.env.example` as a reference for collaborators
-- When deploying to Streamlit Cloud, add keys via their **Secrets UI** — not in code
-
----
-
-## 🧰 Tech Stack
-
-- [Streamlit](https://streamlit.io) — UI framework
-- [LangChain](https://langchain.com) — RAG orchestration
-- [Cohere](https://cohere.com) — LLM (`command-r-plus-08-2024`)
-- [FAISS](https://github.com/facebookresearch/faiss) — Vector store
-- [HuggingFace](https://huggingface.co) — Embeddings (`all-MiniLM-L6-v2`)
-- [RAGAS](https://docs.ragas.io) — RAG evaluation framework
-- [LangSmith](https://smith.langchain.com) — Tracing & observability
+Issues and suggestions are welcome.
