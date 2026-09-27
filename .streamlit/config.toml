@@ -1,0 +1,6 @@
+[server]
+# Keep uploads small enough to index quickly on free hosting.
+maxUploadSize = 25
+
+[browser]
+gatherUsageStats = false
