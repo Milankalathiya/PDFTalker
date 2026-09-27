@@ -1,12 +1,15 @@
-# Main app dependencies
-streamlit
-langchain
-langchain-community
-langchain-cohere
-langchain-huggingface
-langchain-text-splitters
-pypdf
-faiss-cpu
-langsmith
-python-dotenv
-sentence-transformers
+# App dependencies (Streamlit Community Cloud installs these).
+# No torch / sentence-transformers: embeddings, reranking and the LLM are Cohere API calls,
+# which keeps the install small and memory use low on free hosting.
+streamlit==1.58.0
+langgraph==1.2.5
+langchain-core==1.4.7
+langchain-cohere==0.6.0
+cohere==5.20.7
+langchain-community==0.4.2
+langchain-text-splitters==1.1.2
+faiss-cpu==1.14.3
+rank-bm25==0.2.2
+pypdf==6.13.2
+langsmith==0.8.15
+python-dotenv==1.0.0
