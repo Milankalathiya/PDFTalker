@@ -25,6 +25,13 @@ faiss_index/
 
 # --- Uploaded PDFs (temporary files) ---
 *.pdf
+!eval/sample_policy.pdf
+
+# --- Streamlit local secrets ---
+.streamlit/secrets.toml
+
+# --- Test cache ---
+.pytest_cache/
 
 # --- Jupyter Notebooks (colab artifacts) ---
 *.ipynb

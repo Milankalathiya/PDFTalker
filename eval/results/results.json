@@ -1,0 +1,792 @@
+{
+  "agentic": [
+    {
+      "question": "How long is the cooling-off period?",
+      "answer": "21 days [1]",
+      "pages_retrieved": [
+        1,
+        7
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the duration of the cooling-off period, which is the key fact being asked for. The ground truth also mentions a refund condition, but this is not required to answer the question, and the answer does not contradict this information.",
+      "latency": 10.96,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "When is a home considered unoccupied?",
+      "answer": "A home is considered unoccupied when it has not been lived in by you or a member of your family for more than 45 consecutive days. [1]",
+      "pages_retrieved": [
+        2,
+        5,
+        12
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that a home is considered unoccupied after 45 consecutive days of non-occupancy, which aligns with the ground truth.",
+      "latency": 7.97,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the excess for a burst pipe claim?",
+      "answer": "The excess for a burst pipe claim, which is considered an escape of water, is £500. [1]",
+      "pages_retrieved": [
+        3,
+        15,
+        2
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct excess amount for a burst pipe claim, which is £500, and also mentions that it is considered an 'escape of water' excess, aligning with the ground truth.",
+      "latency": 16.43,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "How much does the policy pay for alternative accommodation?",
+      "answer": "The policy will pay reasonable costs of alternative accommodation up to 20% of the buildings sum insured. [1]",
+      "pages_retrieved": [
+        3
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the policy covers reasonable costs of alternative accommodation up to 20% of the building's sum insured, which is consistent with the ground truth.",
+      "latency": 23.72,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the subsidence excess?",
+      "answer": "The subsidence excess is £1,000. [1]",
+      "pages_retrieved": [
+        3
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct key fact that matches the ground truth.",
+      "latency": 13.89,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the maximum payout for a single item of contents?",
+      "answer": "The most the insurance will pay for any one item, pair or set is £2,000 unless the item is individually listed in your schedule. [1]",
+      "pages_retrieved": [
+        4,
+        8,
+        11
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the maximum payout for a single item of contents is £2,000, unless it is individually listed in the schedule. This matches the ground truth.",
+      "latency": 18.39,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Is my son's laptop covered while he lives in university halls?",
+      "answer": "Yes, belongings of family members living away from home in full-time education, such as university halls, are covered up to £3,000. [1]",
+      "pages_retrieved": [
+        4
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the son's laptop is covered while living in university halls, and the information is consistent with the ground truth.",
+      "latency": 8.19,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Is accidental damage to contents included?",
+      "answer": "Accidental damage to contents is not included as standard. It is available as an optional add-on for an additional premium. [1]",
+      "pages_retrieved": [
+        4,
+        15,
+        11
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that accidental damage to contents is not included as standard, and also mentions that it is available as an add-on, which is a secondary detail.",
+      "latency": 11.83,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What does exclusion HS-EX-04 cover?",
+      "answer": "HS-EX-04 covers loss or damage caused by insects, rats, mice, squirrels, or other vermin. [1]",
+      "pages_retrieved": [
+        5
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct information regarding the coverage of exclusion HS-EX-04, which includes loss or damage caused by insects, rats, mice, squirrels, and other vermin.",
+      "latency": 7.78,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Which exclusion code applies to deliberate damage?",
+      "answer": "HS-EX-07 [1]",
+      "pages_retrieved": [
+        5,
+        2
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer matches the ground truth.",
+      "latency": 5.61,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "If a pipe bursts while I've been travelling for two months, am I covered?",
+      "answer": "Yes, you are covered for escape of water, including burst pipes, while you are away from home. [1] However, there is an excess of £500 for this type of claim. [1]",
+      "pages_retrieved": [
+        3,
+        15,
+        8
+      ],
+      "correct": false,
+      "faithful": true,
+      "judge_reason": "The answer contradicts the ground truth.",
+      "latency": 9.42,
+      "hit": 0.0,
+      "rr": 0.0
+    },
+    {
+      "question": "How soon must I tell the insurer about an incident?",
+      "answer": "You must notify the insurer about an incident as soon as possible, and within 30 days. [1]",
+      "pages_retrieved": [
+        6,
+        13,
+        15,
+        14,
+        9
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct information regarding the time frame for notifying the insurer, which aligns with the ground truth.",
+      "latency": 10.78,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "How quickly must a theft be reported to the police?",
+      "answer": "Theft must be reported to the police within 48 hours. [1]",
+      "pages_retrieved": [
+        6,
+        8
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that theft must be reported to the police within 48 hours, which aligns with the ground truth.",
+      "latency": 6.81,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "When can I take a complaint to the ombudsman?",
+      "answer": "You can refer a complaint to the independent ombudsman service if it has not been resolved within 8 weeks, or if you disagree with the final response. [1]",
+      "pages_retrieved": [
+        6
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is consistent with the ground truth.",
+      "latency": 8.44,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What fee is charged for cancelling after the cooling-off period?",
+      "answer": "An administration fee of £35 is charged for cancelling after the cooling-off period. [1]",
+      "pages_retrieved": [
+        7,
+        1
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is consistent with the ground truth.",
+      "latency": 8.39,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the maximum no-claims discount?",
+      "answer": "The maximum no-claims discount is 30%. [1]",
+      "pages_retrieved": [
+        7,
+        10
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the maximum no-claims discount as 30%, which is consistent with the ground truth.",
+      "latency": 6.15,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Does this policy cover my car?",
+      "answer": "I couldn't find information about car coverage in the documents.",
+      "pages_retrieved": [
+        13,
+        7,
+        8,
+        5
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer states that the information was not found in the document, which is consistent with the ground truth.",
+      "latency": 11.02
+    },
+    {
+      "question": "Who is the CEO of Harbourline Mutual?",
+      "answer": "I couldn't find it in the documents.",
+      "pages_retrieved": [
+        1
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer states that the information is not in the document, which is consistent with the ground truth.",
+      "latency": 11.0
+    }
+  ],
+  "hybrid": [
+    {
+      "question": "How long is the cooling-off period?",
+      "answer": "The cooling-off period is 21 days from receiving your documents, or from the start date if later. [1]",
+      "pages_retrieved": [
+        1,
+        7,
+        6
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the cooling-off period is 21 days, and the additional detail about the start date is consistent with the ground truth.",
+      "latency": 3.49,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "When is a home considered unoccupied?",
+      "answer": "A home is considered unoccupied when it has not been lived in by you or a member of your family for more than 45 consecutive days. [1]",
+      "pages_retrieved": [
+        2,
+        5,
+        12
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that a home is considered unoccupied after 45 consecutive days of non-occupancy, which aligns with the ground truth.",
+      "latency": 5.09,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the excess for a burst pipe claim?",
+      "answer": "The excess for loss or damage caused by escape of water, such as a burst pipe, is £500. [1]",
+      "pages_retrieved": [
+        3,
+        2,
+        15
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the excess for a burst pipe claim is £500, which matches the ground truth.",
+      "latency": 4.39,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "How much does the policy pay for alternative accommodation?",
+      "answer": "The policy pays reasonable costs of comparable alternative accommodation for you and your pets, up to 20% of the buildings sum insured. [1]",
+      "pages_retrieved": [
+        3,
+        2,
+        4
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the policy covers reasonable costs of alternative accommodation, up to 20% of the buildings sum insured, which is consistent with the ground truth.",
+      "latency": 3.25,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the subsidence excess?",
+      "answer": "The subsidence excess is £1,000. [1]",
+      "pages_retrieved": [
+        3,
+        15,
+        2
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct key fact that the subsidence excess is £1,000, which matches the ground truth.",
+      "latency": 2.71,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the maximum payout for a single item of contents?",
+      "answer": "The most that will be paid for any one item, pair or set of contents is £2,000 unless the item is individually listed in your schedule. [1]",
+      "pages_retrieved": [
+        4,
+        8,
+        11
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the maximum payout for a single item of contents is £2,000, unless individually listed in the schedule, which does not contradict the ground truth.",
+      "latency": 3.53,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Is my son's laptop covered while he lives in university halls?",
+      "answer": "Yes, belongings of family members living away from home in full-time education, such as university halls, are covered up to £3,000. [1]",
+      "pages_retrieved": [
+        4,
+        5,
+        8
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the son's laptop is covered while living in university halls, and the details do not contradict the ground truth.",
+      "latency": 3.63,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Is accidental damage to contents included?",
+      "answer": "Accidental damage to contents is not included as standard, but it is available as an optional add-on for an additional premium. [1]",
+      "pages_retrieved": [
+        4,
+        11,
+        15
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is consistent with the ground truth.",
+      "latency": 3.33,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What does exclusion HS-EX-04 cover?",
+      "answer": "HS-EX-04 covers loss or damage caused by vermin, including insects, rats, mice, squirrels, and other vermin. [1]",
+      "pages_retrieved": [
+        5,
+        10,
+        2
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that HS-EX-04 covers loss or damage caused by vermin, which includes insects, rats, mice, and squirrels, aligning with the ground truth.",
+      "latency": 3.74,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Which exclusion code applies to deliberate damage?",
+      "answer": "HS-EX-07 [1]",
+      "pages_retrieved": [
+        5,
+        15,
+        4
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer matches the ground truth.",
+      "latency": 2.01,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "If a pipe bursts while I've been travelling for two months, am I covered?",
+      "answer": "Yes, you are covered for escape of water, including burst pipes, while you are away from home. [1] However, there is an excess of £500 for this type of claim. [1]",
+      "pages_retrieved": [
+        3,
+        15,
+        8
+      ],
+      "correct": false,
+      "faithful": true,
+      "judge_reason": "The answer contradicts the ground truth.",
+      "latency": 4.28,
+      "hit": 0.0,
+      "rr": 0.0
+    },
+    {
+      "question": "How soon must I tell the insurer about an incident?",
+      "answer": "You must tell the insurer about any incident that may lead to a claim as soon as possible, and within 30 days. [1]",
+      "pages_retrieved": [
+        6,
+        12,
+        9
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the incident must be reported to the insurer as soon as possible and within 30 days, which aligns with the ground truth.",
+      "latency": 3.07,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "How quickly must a theft be reported to the police?",
+      "answer": "Theft must be reported to the police within 48 hours. [1]",
+      "pages_retrieved": [
+        6,
+        8,
+        9
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that theft must be reported within 48 hours, which matches the ground truth.",
+      "latency": 2.64,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "When can I take a complaint to the ombudsman?",
+      "answer": "You can refer your complaint to the independent ombudsman service if it is not resolved within 8 weeks or if you disagree with the final response. [1]",
+      "pages_retrieved": [
+        6,
+        13,
+        9
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is consistent with the ground truth, stating the conditions under which a complaint can be taken to the ombudsman.",
+      "latency": 2.44,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What fee is charged for cancelling after the cooling-off period?",
+      "answer": "A fee of £35 is charged for cancelling after the cooling-off period. [1]",
+      "pages_retrieved": [
+        7,
+        1,
+        9
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct fee amount of £35, and the context of it being an administration fee is also mentioned. The wording is slightly different, but the key information is conveyed.",
+      "latency": 3.2,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the maximum no-claims discount?",
+      "answer": "The maximum no-claims discount is 30%. [1]",
+      "pages_retrieved": [
+        7,
+        10,
+        11
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the maximum no-claims discount percentage, which is the key fact that answers the question. The ground truth also mentions the number of years required to achieve this discount, but this is not necessary to answer the question, and the answer does not contradict this information.",
+      "latency": 2.35,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Does this policy cover my car?",
+      "answer": "I couldn't find information about car coverage in the documents.",
+      "pages_retrieved": [
+        5,
+        8,
+        9
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer states that the information is not found in the document, which is consistent with the ground truth.",
+      "latency": 2.98
+    },
+    {
+      "question": "Who is the CEO of Harbourline Mutual?",
+      "answer": "I couldn't find it in the documents.",
+      "pages_retrieved": [
+        1,
+        8,
+        7
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is correct, as it states that the information is not found in the document, which is consistent with the ground truth.",
+      "latency": 1.93
+    }
+  ],
+  "basic": [
+    {
+      "question": "How long is the cooling-off period?",
+      "answer": "I couldn't find the length of the cooling-off period in the documents.",
+      "pages_retrieved": [
+        12,
+        6,
+        7
+      ],
+      "correct": false,
+      "faithful": true,
+      "judge_reason": "The answer claims it could not find the information, but the ground truth indicates that it is present in the document.",
+      "latency": 2.42,
+      "hit": 0.0,
+      "rr": 0.0
+    },
+    {
+      "question": "When is a home considered unoccupied?",
+      "answer": "A home is considered unoccupied when it has not been lived in by you or a member of your family for more than 45 consecutive days. [1]",
+      "pages_retrieved": [
+        2,
+        12,
+        5
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that a home is considered unoccupied after 45 consecutive days of non-occupancy, which aligns with the ground truth.",
+      "latency": 2.95,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the excess for a burst pipe claim?",
+      "answer": "The excess for a burst pipe claim is £500. [1]",
+      "pages_retrieved": [
+        3,
+        10,
+        15
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct excess amount of £500 for a burst pipe claim, matching the ground truth.",
+      "latency": 2.41,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "How much does the policy pay for alternative accommodation?",
+      "answer": "The policy will pay up to 20% of the buildings sum insured for alternative accommodation. [2]",
+      "pages_retrieved": [
+        9,
+        3,
+        7
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is correct, although it does not include the detail that the costs must be reasonable and for comparable accommodation.",
+      "latency": 2.07,
+      "hit": 1.0,
+      "rr": 0.5
+    },
+    {
+      "question": "What is the subsidence excess?",
+      "answer": "The subsidence excess is £1,000. [1]",
+      "pages_retrieved": [
+        3,
+        2,
+        10
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the correct value of the subsidence excess.",
+      "latency": 2.27,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the maximum payout for a single item of contents?",
+      "answer": "The most that will be paid for any one item, pair or set is £2,000 unless the item is individually listed in your schedule. [1]",
+      "pages_retrieved": [
+        4,
+        8,
+        11
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the maximum payout for a single item, pair, or set is £2,000, unless individually listed in the schedule, which aligns with the ground truth.",
+      "latency": 4.01,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Is my son's laptop covered while he lives in university halls?",
+      "answer": "Yes, belongings of a family member who is in full-time education and living away from home, such as in university halls, are covered up to £3,000. [1]",
+      "pages_retrieved": [
+        4,
+        5,
+        1
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the son's laptop is covered while living in university halls, and the details do not contradict the ground truth.",
+      "latency": 3.29,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Is accidental damage to contents included?",
+      "answer": "Accidental damage to contents is not included as standard, but it is available as an optional add-on for an additional premium. [1]",
+      "pages_retrieved": [
+        4,
+        5,
+        3
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that accidental damage to contents is not included as standard, but can be added for an additional cost, which matches the ground truth.",
+      "latency": 2.65,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What does exclusion HS-EX-04 cover?",
+      "answer": "HS-EX-04 covers loss or damage caused by vermin, including insects, rats, mice, squirrels, and other vermin. [1]",
+      "pages_retrieved": [
+        5,
+        3,
+        10
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that HS-EX-04 covers loss or damage caused by vermin, which is consistent with the ground truth. The additional detail about specific types of vermin is not required, and the answer does not contradict the ground truth.",
+      "latency": 2.88,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Which exclusion code applies to deliberate damage?",
+      "answer": "HS-EX-07 [1]",
+      "pages_retrieved": [
+        5,
+        3,
+        15
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer matches the ground truth.",
+      "latency": 1.52,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "If a pipe bursts while I've been travelling for two months, am I covered?",
+      "answer": "Yes, you are covered for loss or damage caused by a burst pipe. [2]",
+      "pages_retrieved": [
+        10,
+        3,
+        15
+      ],
+      "correct": false,
+      "faithful": true,
+      "judge_reason": "The answer contradicts the ground truth.",
+      "latency": 2.55,
+      "hit": 0.0,
+      "rr": 0.0
+    },
+    {
+      "question": "How soon must I tell the insurer about an incident?",
+      "answer": "You must notify the insurer of any incident that may lead to a claim as soon as possible, and within 30 days. [1]",
+      "pages_retrieved": [
+        6,
+        14,
+        1
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key fact that the insurer must be notified as soon as possible and within 30 days, which is consistent with the ground truth.",
+      "latency": 3.54,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "How quickly must a theft be reported to the police?",
+      "answer": "Within 48 hours. [1]",
+      "pages_retrieved": [
+        6,
+        13,
+        8
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is correct and does not contradict the ground truth.",
+      "latency": 1.57,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "When can I take a complaint to the ombudsman?",
+      "answer": "You can refer your complaint to the independent ombudsman service if it has not been resolved within 8 weeks or if you disagree with the final response. [1]",
+      "pages_retrieved": [
+        6,
+        9,
+        10
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer provides the key information that a complaint can be taken to the ombudsman if it is not resolved within 8 weeks or if the complainant disagrees with the final response, which aligns with the ground truth.",
+      "latency": 4.35,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What fee is charged for cancelling after the cooling-off period?",
+      "answer": "£35 administration fee [1]",
+      "pages_retrieved": [
+        7,
+        10,
+        9
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is correct, as it matches the ground truth.",
+      "latency": 1.39,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "What is the maximum no-claims discount?",
+      "answer": "The maximum no-claims discount is 30% after 5 claim-free years. [1]",
+      "pages_retrieved": [
+        7,
+        4,
+        8
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer is consistent with the ground truth.",
+      "latency": 2.34,
+      "hit": 1.0,
+      "rr": 1.0
+    },
+    {
+      "question": "Does this policy cover my car?",
+      "answer": "I couldn't find information about car coverage in the documents.",
+      "pages_retrieved": [
+        13,
+        1,
+        14
+      ],
+      "correct": true,
+      "faithful": true,
+      "judge_reason": "The answer states that the information was not found in the document, which is consistent with the ground truth.",
+      "latency": 1.77
+    },
+    {
+      "question": "Who is the CEO of Harbourline Mutual?",
+      "answer": "I couldn't find it in the documents.",
+      "pages_retrieved": [
+        1,
+        14,
+        7
+      ],
+      "correct": true,
+      "faithful": false,
+      "judge_reason": "The answer correctly states that the information is not in the document.",
+      "latency": 1.85
+    }
+  ]
+}

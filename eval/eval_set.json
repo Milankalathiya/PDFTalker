@@ -1,0 +1,20 @@
+[
+  {"question": "How long is the cooling-off period?", "ground_truth": "21 days from receiving the documents (or the start date if later), with a full refund if no claim was made.", "pages": [1]},
+  {"question": "When is a home considered unoccupied?", "ground_truth": "When it has not been lived in by you or your family for more than 45 consecutive days.", "pages": [2]},
+  {"question": "What is the excess for a burst pipe claim?", "ground_truth": "£500, the escape of water excess.", "pages": [3]},
+  {"question": "How much does the policy pay for alternative accommodation?", "ground_truth": "Reasonable costs of comparable accommodation up to 20% of the buildings sum insured.", "pages": [3]},
+  {"question": "What is the subsidence excess?", "ground_truth": "£1,000.", "pages": [3]},
+  {"question": "What is the maximum payout for a single item of contents?", "ground_truth": "£2,000 per item, pair or set unless individually listed in the schedule.", "pages": [4]},
+  {"question": "Is my son's laptop covered while he lives in university halls?", "ground_truth": "Yes, belongings of a family member in full-time education living away from home are covered up to £3,000.", "pages": [4]},
+  {"question": "Is accidental damage to contents included?", "ground_truth": "No, not as standard; it is an optional add-on for an additional premium.", "pages": [4]},
+  {"question": "What does exclusion HS-EX-04 cover?", "ground_truth": "Loss or damage caused by insects, rats, mice, squirrels or other vermin.", "pages": [5]},
+  {"question": "Which exclusion code applies to deliberate damage?", "ground_truth": "HS-EX-07.", "pages": [5]},
+  {"question": "If a pipe bursts while I've been travelling for two months, am I covered?", "ground_truth": "No. After more than 45 consecutive days away the home counts as unoccupied, and escape of water is excluded while unoccupied (HS-EX-05).", "pages": [2, 5]},
+  {"question": "How soon must I tell the insurer about an incident?", "ground_truth": "As soon as possible and within 30 days.", "pages": [6]},
+  {"question": "How quickly must a theft be reported to the police?", "ground_truth": "Within 48 hours, and the crime reference number must be given to the insurer.", "pages": [6]},
+  {"question": "When can I take a complaint to the ombudsman?", "ground_truth": "If the complaint is not resolved within 8 weeks or you disagree with the final response.", "pages": [6]},
+  {"question": "What fee is charged for cancelling after the cooling-off period?", "ground_truth": "A £35 administration fee, deducted from the pro rata refund.", "pages": [7]},
+  {"question": "What is the maximum no-claims discount?", "ground_truth": "30% after 5 claim-free years.", "pages": [7]},
+  {"question": "Does this policy cover my car?", "ground_truth": "The document does not cover or mention car insurance; the answer is not in the document.", "pages": []},
+  {"question": "Who is the CEO of Harbourline Mutual?", "ground_truth": "Not stated in the document.", "pages": []}
+]

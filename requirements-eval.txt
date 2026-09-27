@@ -1,6 +1,5 @@
-# Evaluation-only dependencies (evaluation.py)
-# NOTE: ragas requires scikit-network which needs C++ build tools.
-# If install fails, make sure you have Visual Studio Build Tools installed,
-# or use Python 3.11/3.12 where prebuilt wheels are available.
-ragas
-datasets
+# Extra dependencies for development: tests and regenerating the sample PDF.
+# evaluation.py itself only needs requirements.txt.
+-r requirements.txt
+pytest
+reportlab
