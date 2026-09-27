@@ -118,7 +118,7 @@ Streamlit · LangGraph · LangChain · Cohere (`command-r-plus-08-2024`, `embed-
 
 ## 👤 Author
 
-**Milan Kalathiya**, AI engineer (agentic AI, RAG, Python and Java backends)
+**Milan Kalathiya**, Product Engineer (agentic AI, RAG, Python and Java backends)
 
 - ✉️ [kalthiyamilan@gmail.com](mailto:kalthiyamilan@gmail.com)
 - 💼 [linkedin.com/in/milankalathiya](https://linkedin.com/in/milankalathiya)
