@@ -9,6 +9,7 @@ agentic  route -> rewrite follow-up into standalone queries (split multi-part qu
 """
 
 import operator
+import re
 from typing import Annotated, Literal, TypedDict
 
 from pydantic import BaseModel, Field
@@ -32,11 +33,13 @@ NOT_FOUND = "I couldn't find this in the uploaded documents."
 
 
 ANALYZE_SYSTEM = """You route messages for an assistant that answers questions about PDFs the user uploaded.
-- route "conversation" only for greetings, thanks, or questions about the assistant itself.
 - route "overview" when the message is about the document as a whole rather than a specific fact:
-  summarize it, review or critique it, list its strengths and weaknesses, suggest improvements,
-  or explain what it is about. "The file" or "this document" means the uploaded document.
-- route "documents" for everything else; the user expects answers from their documents.
+  summarize it, review or critique it, list its pros and cons, suggest improvements or corrections,
+  or explain what it is about. "The file", "it" or "this document" means the uploaded document.
+  Example: "can you tell me about the file? pros and cons? how to correct it?" -> overview.
+- route "documents" for any other question that could be answered from the document's contents.
+- route "conversation" only for greetings, thanks, or questions about the assistant itself that
+  mention nothing about the documents. When in doubt, never choose "conversation".
 Rewrite the latest user message into standalone search queries, resolving pronouns and
 references from the conversation so far. Use the vocabulary of the documents described below,
 not generic words like "file". Keep key terms, numbers and codes exactly as written.
@@ -81,7 +84,13 @@ An answer that says the information could not be found counts as grounded."""
 
 CONVERSATION_SYSTEM = """You are PDF Talker, an assistant that answers questions about PDFs the user uploads.
 The user has already loaded these documents: {sources}.
-Reply briefly and warmly, and invite the user to ask about them."""
+Reply briefly and warmly, and invite the user to ask about them.
+You have not read the documents in this step, so never describe, summarize or judge their contents here."""
+
+# A message with any of these words is about the documents, whatever the router says.
+DOCUMENT_WORDS = {"file", "files", "document", "documents", "doc", "pdf", "page", "pages", "content", "contents",
+                  "summary", "summarize", "summarise", "review", "critique", "improve", "improvement", "correct",
+                  "fix", "pros", "cons", "strength", "strengths", "weakness", "weaknesses", "good", "bad"}
 
 
 class QueryAnalysis(BaseModel):
@@ -135,6 +144,13 @@ def output_tokens(response) -> int:
     # Cohere reports usage in usage_metadata when invoked, but only in token_count when streamed.
     usage = response.usage_metadata or response.response_metadata.get("token_count") or {}
     return int(usage.get("output_tokens", 0))
+
+
+def mentions_documents(question: str, sources: list[str]) -> bool:
+    """Cheap guard against routing a question about the documents to small talk."""
+    words = set(re.findall(r"[a-z]+", question.lower()))
+    name_words = {w for name in sources for w in re.findall(r"[a-z]{3,}", name.lower())}
+    return bool(words & (DOCUMENT_WORDS | name_words))
 
 
 def describe_documents(kb: KnowledgeBase) -> str:
@@ -195,8 +211,11 @@ def build_graph(kb: KnowledgeBase, llm, reranker):
         queries = [q for q in (result.search_queries if result else []) if q.strip()][:MAX_QUERIES]
         route = result.route if result else "documents"
         queries = queries or [state["question"]]  # model skipped the tool call: plain document search
+        note = ""
+        if route == "conversation" and mentions_documents(state["question"], kb.sources):
+            route, note = "overview", " (router said conversation, but the message mentions the documents)"
         shown = "; ".join(f"“{q}”" for q in queries)
-        return {"route": route, "search_queries": queries, "trace": [f"Router → {route}; search: {shown}"]}
+        return {"route": route, "search_queries": queries, "trace": [f"Router → {route}{note}; search: {shown}"]}
 
     def retrieve(state: RAGState) -> RAGState:
         queries = state["search_queries"]

@@ -6,7 +6,7 @@ from langchain_core.documents import Document
 from langgraph.graph import END
 
 from agent import (
-    MAX_ATTEMPTS, MAX_REWRITES, route_after_analyze, route_after_check,
+    MAX_ATTEMPTS, MAX_REWRITES, mentions_documents, route_after_analyze, route_after_check,
     route_after_generate, route_after_retrieve,
 )
 from rag_pipeline import RetrievedChunk, read_pdf, reciprocal_rank_fusion, split_pages, tokenize
@@ -44,6 +44,14 @@ def test_pdf_pages_keep_source_and_page_numbers():
 def test_conversation_skips_retrieval():
     assert route_after_analyze({"route": "conversation"}) == "converse"
     assert route_after_analyze({"route": "documents"}) == "retrieve"
+
+
+def test_questions_about_the_file_are_never_small_talk():
+    sources = ["Milan_Kalathiya_AI.pdf"]
+    assert mentions_documents("can you tell me about file? pros and cons? how to correct it?", sources)
+    assert mentions_documents("what do you think of Milan's CV?", sources)
+    assert not mentions_documents("hi", sources)
+    assert not mentions_documents("thanks, what can you do?", sources)
 
 
 def test_overview_reads_whole_document_and_skips_grounding_check():
