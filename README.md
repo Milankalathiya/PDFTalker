@@ -12,7 +12,7 @@ Deployed on Streamlit Community Cloud. No PDF handy? Click **Try the sample insu
 
 ## ✨ Features
 
-- 🧠 **Agentic RAG (LangGraph)**: routes each message, rewrites follow-ups into standalone queries, splits questions that depend on several facts into sub-queries, grades retrieved chunks, searches again with new wording when nothing is relevant, and runs a grounding check that triggers a stricter regeneration if a claim isn't supported
+- 🧠 **Agentic RAG (LangGraph)**: routes each message (fact lookup, whole-document request such as summarize or critique, or small talk), rewrites follow-ups into standalone queries, splits questions that depend on several facts into sub-queries, grades retrieved chunks, searches again with new wording when nothing is relevant, and runs a grounding check that triggers a stricter regeneration if a claim isn't supported
 - 🔀 **Hybrid retrieval**: FAISS semantic search + BM25 keyword search, merged with reciprocal rank fusion, then **Cohere Rerank**
 - 📚 **Citations**: every answer cites `[n]` sources with file name, page number and relevance score
 - 💬 **Real chat**: conversation memory and streamed answers
@@ -27,6 +27,7 @@ Deployed on Streamlit Community Cloud. No PDF handy? Click **Try the sample insu
 flowchart LR
     Q[Question + chat history] --> A{Route}
     A -- greeting --> C[Reply directly]
+    A -- summarize / review --> O[Read whole document] --> Gen
     A -- documents --> R[1–3 sub-queries<br/>FAISS + BM25 → Rerank<br/>per query, merged]
     R --> G{Relevant chunks?}
     G -- no, first try --> W[Rewrite query] --> R

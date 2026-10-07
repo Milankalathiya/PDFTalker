@@ -46,6 +46,12 @@ def test_conversation_skips_retrieval():
     assert route_after_analyze({"route": "documents"}) == "retrieve"
 
 
+def test_overview_reads_whole_document_and_skips_grounding_check():
+    assert route_after_analyze({"route": "overview"}) == "overview"
+    assert route_after_generate({"mode": "agentic", "route": "overview"}) == END
+    assert route_after_generate({"mode": "agentic", "route": "documents"}) == "check_grounding"
+
+
 def chunk(score):
     return RetrievedChunk(doc(0), score, "relevance")
 

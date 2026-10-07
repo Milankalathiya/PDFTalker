@@ -46,7 +46,8 @@ def load_reranker():
 class RetrievedChunk:
     doc: Document
     score: float
-    score_kind: str  # "relevance" (rerank, higher is better) or "distance" (FAISS L2, lower is better)
+    score_kind: str  # "relevance" (rerank, higher is better), "distance" (FAISS L2, lower is better)
+                     # or "document" (whole-document read, no retrieval score)
 
     @property
     def label(self) -> str:

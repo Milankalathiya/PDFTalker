@@ -16,7 +16,13 @@ if not os.getenv("COHERE_API_KEY"):
     try:
         os.environ["COHERE_API_KEY"] = st.secrets["COHERE_API_KEY"]
     except Exception:
-        st.error("COHERE_API_KEY is not set. Add it to `.env` locally or to the app's Secrets on Streamlit Cloud.")
+        try:
+            found = sorted(st.secrets.keys())
+        except Exception:
+            found = []
+        st.error("COHERE_API_KEY is not set. Add it to `.env` locally or to the app's Secrets on Streamlit Cloud "
+                 "(TOML format, e.g. `COHERE_API_KEY = \"...\"` with quotes), then reboot the app.")
+        st.caption(f"Secret names the app can see: {found or 'none'}")
         st.stop()
 
 from agent import MODES, build_graph, initial_state
@@ -70,8 +76,8 @@ def render_details(msg: dict):
     if sources:
         with st.expander(f"📚 Sources ({len(sources)})"):
             for i, src in enumerate(sources, start=1):
-                score = (f"relevance {src['score']:.2f}" if src["kind"] == "relevance"
-                         else f"distance {src['score']:.3f}")
+                score = {"relevance": f"relevance {src['score']:.2f}",
+                         "distance": f"distance {src['score']:.3f}"}.get(src["kind"], "whole document")
                 st.markdown(f"**[{i}] {src['label']}** · {score}")
                 st.caption(src["text"][:600] + ("…" if len(src["text"]) > 600 else ""))
 

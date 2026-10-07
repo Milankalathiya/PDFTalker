@@ -25,18 +25,27 @@ MAX_REWRITES = 1      # extra retrieval rounds with reworded queries
 MAX_QUERIES = 3       # sub-queries per question in agentic mode
 MAX_SOURCES = 5       # merged chunks passed to the LLM in agentic mode
 MAX_ATTEMPTS = 2      # answer generations (1 + one regeneration after a failed grounding check)
+OVERVIEW_CHUNKS = 12  # whole-document questions read up to this many chunks, in document order
+PREVIEW_CHARS = 400   # start of each document shown to the router so it knows what it is searching
 HISTORY_TURNS = 6     # past messages sent to the LLM
 NOT_FOUND = "I couldn't find this in the uploaded documents."
 
 
 ANALYZE_SYSTEM = """You route messages for an assistant that answers questions about PDFs the user uploaded.
 - route "conversation" only for greetings, thanks, or questions about the assistant itself.
+- route "overview" when the message is about the document as a whole rather than a specific fact:
+  summarize it, review or critique it, list its strengths and weaknesses, suggest improvements,
+  or explain what it is about. "The file" or "this document" means the uploaded document.
 - route "documents" for everything else; the user expects answers from their documents.
 Rewrite the latest user message into standalone search queries, resolving pronouns and
-references from the conversation so far. Keep key terms, numbers and codes exactly as written.
+references from the conversation so far. Use the vocabulary of the documents described below,
+not generic words like "file". Keep key terms, numbers and codes exactly as written.
 Usually one query is enough. If answering depends on several facts, such as whether a rule
 applies in a described situation, add up to two more queries for the conditions, definitions
-or exceptions that could decide it."""
+or exceptions that could decide it.
+
+Uploaded documents:
+{documents}"""
 
 ANSWER_SYSTEM = """You answer questions using only the numbered sources below, which are excerpts from the user's PDFs.
 - Cite the sources you use with bracketed numbers right after each claim, e.g. [1] or [2][3].
@@ -44,6 +53,17 @@ ANSWER_SYSTEM = """You answer questions using only the numbered sources below, w
 - Be concise and direct.
 
 Sources:
+{context}"""
+
+OVERVIEW_SYSTEM = """You help the user with a document they uploaded. Its content is given below as numbered excerpts.
+Answer the user's request about the document as a whole: summarize, review, critique, point out strengths
+and weaknesses, or suggest improvements, as asked.
+- Base every observation on what the document actually says, and cite the excerpt it comes from, e.g. [1].
+- You may use your own expertise to judge the document and recommend changes; make clear which parts
+  are your assessment.
+- Be specific and practical.
+
+Document:
 {context}"""
 
 STRICT_NOTE = """
@@ -65,7 +85,7 @@ Reply briefly and warmly, and invite the user to ask about them."""
 
 
 class QueryAnalysis(BaseModel):
-    route: Literal["documents", "conversation"] = Field(description="Where the answer should come from.")
+    route: Literal["documents", "overview", "conversation"] = Field(description="Where the answer should come from.")
     search_queries: list[str] = Field(description="1 to 3 standalone search queries for the document index.")
 
 
@@ -117,6 +137,14 @@ def output_tokens(response) -> int:
     return int(usage.get("output_tokens", 0))
 
 
+def describe_documents(kb: KnowledgeBase) -> str:
+    """File name plus the opening text of each document, so the router knows what it is searching."""
+    first_chunk = {}
+    for chunk in kb.chunks:
+        first_chunk.setdefault(chunk.metadata["source"], chunk.page_content)
+    return "\n".join(f"- {name}: {text[:PREVIEW_CHARS].replace(chr(10), ' ')}..." for name, text in first_chunk.items())
+
+
 def history_messages(state: RAGState) -> list:
     return [
         HumanMessage(m["content"]) if m["role"] == "user" else AIMessage(m["content"])
@@ -127,7 +155,7 @@ def history_messages(state: RAGState) -> list:
 # ----- routing (pure functions, unit-tested) -----
 
 def route_after_analyze(state: RAGState) -> str:
-    return "converse" if state["route"] == "conversation" else "retrieve"
+    return {"conversation": "converse", "overview": "overview"}.get(state["route"], "retrieve")
 
 
 def route_after_retrieve(state: RAGState) -> str:
@@ -141,7 +169,8 @@ def route_after_retrieve(state: RAGState) -> str:
 
 
 def route_after_generate(state: RAGState) -> str:
-    return "check_grounding" if state["mode"] == "agentic" else END
+    # an overview answer contains the model's own assessment, which a grounding check would reject
+    return "check_grounding" if state["mode"] == "agentic" and state.get("route") != "overview" else END
 
 
 def route_after_check(state: RAGState) -> str:
@@ -154,13 +183,14 @@ def build_graph(kb: KnowledgeBase, llm, reranker):
     analyzer = llm.with_structured_output(QueryAnalysis)
     checker = llm.with_structured_output(GroundingCheck)
     rewriter = llm.with_structured_output(AlternativeQueries)
+    analyze_system = ANALYZE_SYSTEM.format(documents=describe_documents(kb))
 
     def analyze(state: RAGState) -> RAGState:
         if state["mode"] != "agentic":
             return {"route": "documents", "search_queries": [state["question"]],
                     "trace": ["Search query: the question as typed (no routing or rewriting)"]}
         result = analyzer.invoke(
-            [SystemMessage(ANALYZE_SYSTEM), *history_messages(state), HumanMessage(state["question"])]
+            [SystemMessage(analyze_system), *history_messages(state), HumanMessage(state["question"])]
         )
         queries = [q for q in (result.search_queries if result else []) if q.strip()][:MAX_QUERIES]
         route = result.route if result else "documents"
@@ -206,12 +236,18 @@ def build_graph(kb: KnowledgeBase, llm, reranker):
         return {"search_queries": queries, "rewrites": state.get("rewrites", 0) + 1,
                 "trace": [f"Evidence weak; broadening search with {shown}"]}
 
+    def overview(state: RAGState) -> RAGState:
+        chunks = [RetrievedChunk(c, 1.0, "document") for c in kb.chunks[:OVERVIEW_CHUNKS]]
+        note = "" if len(kb.chunks) <= OVERVIEW_CHUNKS else f" (first {OVERVIEW_CHUNKS} of {len(kb.chunks)} chunks)"
+        return {"chunks": chunks, "trace": [f"Whole-document question -> reading {len(chunks)} chunks in order{note}"]}
+
     def not_found(state: RAGState) -> RAGState:
         return {"answer": NOT_FOUND, "grounded": True,
                 "trace": ["Still nothing relevant → answered 'not found' without calling the LLM"]}
 
     def generate(state: RAGState) -> RAGState:
-        system = ANSWER_SYSTEM.format(context=format_context(state["chunks"]))
+        template = OVERVIEW_SYSTEM if state.get("route") == "overview" else ANSWER_SYSTEM
+        system = template.format(context=format_context(state["chunks"]))
         if state.get("unsupported"):
             system += STRICT_NOTE.format(unsupported=state["unsupported"])
         response = llm.invoke([SystemMessage(system), *history_messages(state), HumanMessage(state["question"])])
@@ -237,12 +273,13 @@ def build_graph(kb: KnowledgeBase, llm, reranker):
 
     graph = StateGraph(RAGState)
     for name, node in [("analyze", analyze), ("retrieve", retrieve), ("rewrite", rewrite),
-                       ("not_found", not_found), ("generate", generate),
+                       ("overview", overview), ("not_found", not_found), ("generate", generate),
                        ("check_grounding", check_grounding), ("converse", converse)]:
         graph.add_node(name, node)
 
     graph.add_edge(START, "analyze")
-    graph.add_conditional_edges("analyze", route_after_analyze, ["retrieve", "converse"])
+    graph.add_conditional_edges("analyze", route_after_analyze, ["retrieve", "overview", "converse"])
+    graph.add_edge("overview", "generate")
     graph.add_conditional_edges("retrieve", route_after_retrieve, ["generate", "rewrite", "not_found"])
     graph.add_edge("rewrite", "retrieve")
     graph.add_conditional_edges("generate", route_after_generate, ["check_grounding", END])
